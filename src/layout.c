@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "layout.h"
 #include "debugging.h"
@@ -27,4 +28,18 @@ int append_urdiv(urdiv* parent, urdiv* new_child){
 	parent->children = new_ptr;
 
 	return 0;
+}
+
+
+//pretty print div
+void pp_div(urdiv* d){
+	printf("-DIV-\n");
+	printf("Children count : %d\n", d->children_count);
+	printf("Children pointer : %8p\n", d->children);
+	printf("Format :");
+	int i=0;
+	if(d->format) while(d->format[i]) printf(" %2x", d->format[i++]);
+	printf("\n");
+	printf("Action : %s\n", d->action ? "YES" : "NULL");
+	printf("-----\n");
 }

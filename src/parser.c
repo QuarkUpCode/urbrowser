@@ -45,9 +45,9 @@ urdiv parse_urdiv(const char* source){
 				case 'f':
 					i++; if(!source[i]) break; if(source[i] != '=') break;	//now on '='
 					i++; if(!source[i]) break;	//now past '='
-					int j=0;
+					j=0;
 					while(source[i+j] && source[i+j]!='>') j++;
-					l = j-i;
+					l = j;
 					d.format = uralloc(l+1);
 					j=0;
 					while(j<=l){

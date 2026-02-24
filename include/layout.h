@@ -13,4 +13,6 @@ typedef struct {
 
 int append_urdiv(urdiv* parent, urdiv* new_child);
 
+void pp_div(urdiv* d);
+
 #endif
