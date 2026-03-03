@@ -36,7 +36,7 @@ urdiv parse_urdiv(const char* source, int* i){
 	// int i=0;
 	int j;
 	int l;
-	urdiv d = {0, 0, 0, 0, 0};
+	urdiv d = {0, 0, 0, 0, 0, -1, 0, -1, 0};
 	d.origin = *i;
 	urdiv tmp;
 	while(source[*i] && source[*i]!='>'){
@@ -95,7 +95,9 @@ urdiv parse_urdiv(const char* source, int* i){
 
 urdiv parse_from_str(const char* source){
 	int i=0;
-	urdiv main_div = {0, 0, 0, 0, 0};
+	const int BASE_WIDTH = 48;
+	const int BASE_HEIGHT = 36;
+	urdiv main_div = {0, 0, 0, 0, 0, BASE_WIDTH, 0, BASE_HEIGHT, 0};
 	urdiv tmp;
 	while(source[i] != 0x00){
 		if(source[i] == '<'){

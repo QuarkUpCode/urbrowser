@@ -9,7 +9,10 @@ typedef struct urdiv_s{
 	struct urdiv_s* children;
 	int(*action)(void*);
 	int origin;
-
+	int width;
+	int dx;
+	int height;
+	int dy;
 } urdiv;
 
 
