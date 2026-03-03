@@ -19,57 +19,83 @@ void urfree(char* p){
 
 int validate_format(urdiv* d){
 	
-	int invalid = 1;
+	int invalid = 0;
 	if(invalid){
 		urfree(d->format);
 		d->format = 0;
 		return invalid;
 	}
-
+	DEBUG("%s\n", d->format);
 	return 0;
 }
 
 /*
 	char* source : char* to the character directly following '<d' in source string
 */
-urdiv parse_urdiv(const char* source){
-	int i=0;
+urdiv parse_urdiv(const char* source, int* i){
+	// int i=0;
 	int j;
 	int l;
-	urdiv d = {0, 0, 0, 0};
-	while(source[i] && source[i]!='>'){
-		if(source[i] == '$'){
-			i++;
-			if(!source[i]) break;
-			switch(source[i]){
+	urdiv d = {0, 0, 0, 0, 0};
+	d.origin = *i;
+	urdiv tmp;
+	while(source[*i] && source[*i]!='>'){
+		if(source[*i] == '$'){
+			(*i)++;
+			if(!source[*i]) break;
+			switch(source[*i]){
 				case 'f':
-					i++; if(!source[i]) break; if(source[i] != '=') break;	//now on '='
-					i++; if(!source[i]) break;	//now past '='
+					(*i)++; if(!source[*i]) break; if(source[*i] != '=') break;	//now on '='
+					(*i)++; if(!source[*i]) break;	//now past '='
 					j=0;
-					while(source[i+j] && source[i+j]!='>') j++;
+					while(source[(*i)+j] && source[(*i)+j]!='>' && source[(*i)+j]!=' ') j++;
 					l = j;
+					// printf("LEN : %d\n", l);
 					d.format = uralloc(l+1);
 					j=0;
 					while(j<=l){
-						d.format[j] = source[i];
-						i++;
+						d.format[j] = source[*i];
+						(*i)++;
 						j++;
 					}
 					d.format[l] = 0x00;
 					validate_format(&d);
 					break;
 				default:
+					DEBUG("Unexpected char after $ : %c\n", source[*i]);
 					break;
 			}
 		}
-		i++;
+		(*i)++;
+	}
+	// while(source[*i] && source[*i]!='<') (*i)++;
+	// if(!source[*i]) return d;
+	// (*i)++;
+	// if(!source[*i]) return d;
+	while(source[*i]){
+		while(source[*i] && source[*i]!='<') (*i)++;
+		if(!source[*i]) return d;
+		(*i)++;
+		if(!source[*i]) return d;
+		switch(source[*i]){
+			case '/':
+				return d;
+			case 'd':
+				DEBUG("NEW DIV at %d\n", *i);
+				tmp = parse_urdiv(source, i);
+				append_urdiv(&d, &tmp);
+				break;
+			default:
+				LOG("Unexpected character at source[%d] : %c\n", *i, source[*i]);
+				break;
+		}
 	}
 	return d;
 }
 
 urdiv parse_from_str(const char* source){
 	int i=0;
-	urdiv main_div = {0, 0, 0, 0};
+	urdiv main_div = {0, 0, 0, 0, 0};
 	urdiv tmp;
 	while(source[i] != 0x00){
 		if(source[i] == '<'){
@@ -79,8 +105,10 @@ urdiv parse_from_str(const char* source){
 					break;
 				case 'd':
 					i++;
-					tmp = parse_urdiv(&(source[i]));
+					// tmp = parse_urdiv(&(source[i]));
+					tmp = parse_urdiv(source, &i);
 					append_urdiv(&main_div, &tmp);
+					break;
 				default:
 					break;
 			}

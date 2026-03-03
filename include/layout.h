@@ -1,12 +1,14 @@
 #ifndef LAYOUT_H
 #define LAYOUT_H
 
-typedef struct {
+typedef struct urdiv_s{
 
 	int children_count;
 	char* format;
-	void* children;
+	// void* children;
+	struct urdiv_s* children;
 	int(*action)(void*);
+	int origin;
 
 } urdiv;
 

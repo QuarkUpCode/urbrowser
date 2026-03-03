@@ -17,7 +17,11 @@ int main(int argc, char** argv){
 	char* testsrc = loadfile("test/data/example.uwu");
 	urdiv root = parse_from_str(testsrc);
 	pp_div(&root);
-	pp_div(root.children);
+	// pp_div(root.children);
+
+	// for(int i=0; i<root.children_count; i++){
+	// 	pp_div(&(root.children[i]));
+	// }
 
 	return 0;
 }
